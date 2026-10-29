@@ -7,6 +7,7 @@
   "hud_ratio": 0.12,
   "bottom_safe_ratio": 0.92,
   "particle_limit": 24,
+  "scoring": {"base": 10, "speed_bonus": 0.5, "diff_step": 0.015, "risk_multiplier": 1.2},
   "anchors": [
     {"level": 1, "objects": 2, "red": 1, "radius": 150, "speed": 0, "window": 4.0},
     {"level": 5, "objects": 3, "red": 1, "radius": 135, "speed": 0, "window": 3.2},

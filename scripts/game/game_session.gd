@@ -9,6 +9,7 @@ var score: int = 0
 var best_score: int = 0
 var wave_mistake: bool = false
 var wave_time: float = 0.0
+var last_reaction: float = 0.0
 var params: DifficultyParams
 var difficulty := DifficultyManager.new()
 var scoring := ScoreManager.new()
@@ -38,6 +39,7 @@ func _start_wave() -> void:
 func _process(delta: float) -> void:
 	if state != State.PLAYING: return
 	wave_time += minf(delta, 0.05)
+	hud.set_debug(arena.targets.size(), last_reaction)
 	var safe_left: int = 0
 	for target in arena.targets:
 		if is_instance_valid(target) and not target.is_red: safe_left += 1
@@ -54,15 +56,18 @@ func _process(delta: float) -> void:
 func _on_target_tapped(target: Target, reaction: float) -> void:
 	if state != State.PLAYING or not is_instance_valid(target): return
 	if target.is_red:
-		lives -= 1; wave_mistake = true; combo.register_mistake(); _update_hud()
+		lives -= 1; wave_mistake = true; combo.register_mistake(); hud.wrong_tap_flash(); arena.shake(); _update_hud()
 		if lives <= 0: _game_over()
 		return
 	var risky: bool = false
 	for other in arena.targets:
 		if other.is_red and target.position.distance_to(other.position) <= target.radius * 1.5: risky = true
-	combo.register_safe_tap()
+	combo.register_safe_tap(); last_reaction = reaction; target.active = false
 	score += scoring.points(reaction, params.window, combo.streak, level, risky)
-	arena.remove_target(target); _update_hud()
+	var pop := target.create_tween()
+	pop.tween_property(target, "scale", Vector2.ZERO, 0.12)
+	pop.finished.connect(func() -> void: arena.remove_target(target))
+	_update_hud()
 	if _safe_count() == 0: _finish_wave()
 
 func _on_empty_tapped(_position: Vector2) -> void:
@@ -89,4 +94,10 @@ func _game_over() -> void:
 
 func _update_hud() -> void:
 	hud.set_values(lives, level, score, combo.streak, State.keys()[state], best_score)
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_APPLICATION_PAUSED or what == NOTIFICATION_WM_WINDOW_FOCUS_OUT:
+		get_tree().paused = true
+	elif what == NOTIFICATION_APPLICATION_RESUMED or what == NOTIFICATION_WM_WINDOW_FOCUS_IN:
+		get_tree().paused = false
 
