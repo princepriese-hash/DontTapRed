@@ -1,0 +1,14 @@
+.godot/
+*.import
+export/
+exports/
+build/
+*.apk
+*.aab
+*.keystore
+*.p12
+.env
+credentials.json
+*.uid
+Godot_v4*.exe
+

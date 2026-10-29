@@ -1,0 +1,16 @@
+{
+  "lives": 3,
+  "next_level_delay": 0.4,
+  "touch_debounce": 0.08,
+  "min_spawn_gap": 16,
+  "last_touch_clearance": 150,
+  "hud_ratio": 0.12,
+  "bottom_safe_ratio": 0.92,
+  "particle_limit": 24,
+  "anchors": [
+    {"level": 1, "objects": 2, "red": 1, "radius": 150, "speed": 0, "window": 4.0},
+    {"level": 5, "objects": 3, "red": 1, "radius": 135, "speed": 0, "window": 3.2},
+    {"level": 10, "objects": 5, "red": 2, "radius": 115, "speed": 40, "window": 2.6},
+    {"level": 25, "objects": 8, "red": 3, "radius": 90, "speed": 160, "window": 1.9}
+  ]
+}
